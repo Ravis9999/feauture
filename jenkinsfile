@@ -1,59 +1,23 @@
 pipeline {
     agent any
-
+    
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from the repository
-                checkout scm
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                // Assuming Maven for Java project
-                sh 'mvn test'
-            }
-        }
-
         stage('Build') {
             steps {
-                // Assuming Maven for Java project
-                sh 'mvn clean package'
+                echo 'Building...'
             }
         }
 
-        stage('Deploy to Staging') {
-            when {
-                expression { BRANCH_NAME ==~ /^(develop|feature\/.*)$/ }
-            }
+        stage('Test') {
             steps {
-                script {
-                    // Deploy to staging environment
-                    sh './scripts/deploy.sh staging'
-                }
+                echo 'Testing...'
             }
         }
 
-        stage('Deploy to Production') {
-            when {
-                expression { BRANCH_NAME == 'master' }
-            }
+        stage('Deploy') {
             steps {
-                script {
-                    // Deploy to production environment
-                    sh './scripts/deploy.sh production'
-                }
+                echo 'Deploying...'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
         }
     }
 }
